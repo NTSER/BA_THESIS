@@ -1,0 +1,9 @@
+political_news.csv filter=lfs diff=lfs merge=lfs -text
+training/bestmod_vecs.npy filter=lfs diff=lfs merge=lfs -text
+training/bestmod.model filter=lfs diff=lfs merge=lfs -text
+scraping/formulanewsge/formulanewsge.json filter=lfs diff=lfs merge=lfs -text
+scraping/imedinewsge/imedinewsge.json filter=lfs diff=lfs merge=lfs -text
+scraping/mtavaritv/mtavaritv.json filter=lfs diff=lfs merge=lfs -text
+scraping/postvmedia/postvmedia.json filter=lfs diff=lfs merge=lfs -text
+scraping/tv1ge/tv1ge.json filter=lfs diff=lfs merge=lfs -text
+scraping/tvpirvelige/tvpirvelige.csv filter=lfs diff=lfs merge=lfs -text

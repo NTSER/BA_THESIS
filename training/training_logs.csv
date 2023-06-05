@@ -1,0 +1,3 @@
+vector_size,window,alpha,min_alpha,max_vocab_size,best_f1_score
+1024,5,0.025,0.001,10000,0.43415199121387116
+512,5,0.025,0.001,10000,0.4095880273192672
