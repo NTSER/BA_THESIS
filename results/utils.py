@@ -68,10 +68,9 @@ class Polarity:
         return final_df
 
     def get_D(self):
-        def dissimilarity_func(vec1, vec2):
-            # euclidean_dis = np.linalg.norm(vec1-vec2)
+        def cosine_dissimilarity(vec1, vec2):
             cosine_dis = 1-np.dot(vec1, vec2)/(np.linalg.norm(vec1)*np.linalg.norm(vec2))
-            return cosine_dis
+            return cosine_dis/2
         
         D_df = pd.DataFrame(columns=['date', 'comb', 'D'])
         repr_vecs = self.get_representative_vectors()
@@ -80,7 +79,7 @@ class Polarity:
             for comb in self.combs:
                 temp = repr_vecs[(repr_vecs['date'] == date) & (repr_vecs['source'].isin(comb))]
                 if temp.shape[0] == 2: # If we have statistics for both media sources
-                    D = dissimilarity_func(temp['repr_vecs'].iloc[0], temp['repr_vecs'].iloc[1])
+                    D = cosine_dissimilarity(temp['repr_vecs'].iloc[0], temp['repr_vecs'].iloc[1])
                     new_row = pd.DataFrame({'date':date, 'comb':[comb], 'D':D})
                     D_df = pd.concat([D_df, new_row])
         D_df = D_df.reset_index(drop=True)
