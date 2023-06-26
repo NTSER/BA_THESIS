@@ -125,7 +125,6 @@ class Polarity:
         B_df = B_df.merge(weights_df, how='left', on=['date', 'comb'])
         B_df['weight_i_j'] = B_df.groupby('date', group_keys=False)['weight_i_j'].apply(lambda x: x/x.sum())
         B_df['polarity'] = B_df['B']*B_df['weight_i_j']
-        B_df['between_combs'] = B_df['comb'].isin(self.between_combs)
 
         return B_df 
 
@@ -136,9 +135,9 @@ class Polarity:
                      .agg({'vecs':'mean'})
                      .reset_index())
         repr_vecs[['x','y']] = pca.fit_transform(np.vstack(repr_vecs['vecs'].values))
-        repr_vecs[['x_rolling', 'y_rolling']] = (repr_vecs
+        repr_vecs[['x_ewma', 'y_ewma']] = (repr_vecs
                                                  .groupby('source', group_keys=False)[['x', 'y']]
-                                                 .apply(lambda x :x.rolling(30).mean()))
+                                                 .apply(lambda x :x.ewm(alpha=0.05).mean()))
         return repr_vecs
     
     def save_animation(self, file_name='animation.mp4', im_size=0.4):
@@ -156,22 +155,21 @@ class Polarity:
             filtered = repr_vecs[repr_vecs['date'] == date]
             
             ax.cla()
-            ax.scatter(filtered['x_rolling'], filtered['y_rolling'], alpha=0)
+            ax.scatter(filtered['x_ewma'], filtered['y_ewma'], alpha=0)
             ax.grid(True, linestyle='--', alpha=0.5)
-            ax.set_xlim([repr_vecs['x_rolling'].min(), repr_vecs['x_rolling'].max()])
-            ax.set_ylim([repr_vecs['y_rolling'].min(), repr_vecs['y_rolling'].max()])
-            ax.set_title(date.astype(str)[0:10], fontsize=20)
+            ax.set_xlim([-3, 3])
+            ax.set_ylim([-2, 2])
+            ax.set_title(date.astype(str)[0:10], fontsize=20, fontweight='bold')
             for j in range(filtered.shape[0]):
                 current_img = self.source_to_logo.get(filtered['source'].iloc[j])
                 img_y, img_x = current_img.shape[0:2]
                 img_y, img_x = img_y/(img_y+img_x), img_x/(img_y+img_x)
                 ax.imshow(current_img,
-                            extent=[filtered['x_rolling'].iloc[j] - im_size * img_x,
-                                    filtered['x_rolling'].iloc[j] + im_size * img_x,
-                                    filtered['y_rolling'].iloc[j] - im_size * img_y,
-                                    filtered['y_rolling'].iloc[j] + im_size * img_y])
+                            extent=[filtered['x_ewma'].iloc[j] - im_size * img_x,
+                                    filtered['x_ewma'].iloc[j] + im_size * img_x,
+                                    filtered['y_ewma'].iloc[j] - im_size * img_y,
+                                    filtered['y_ewma'].iloc[j] + im_size * img_y])
  
         animation = FuncAnimation(fig, annimate, interval=200, frames=num_iterations)
         writer = FFMpegWriter(fps=15)
         animation.save(file_name, writer=writer)
-
