@@ -12,9 +12,8 @@ from matplotlib.animation import FuncAnimation, FFMpegWriter
 
 
 class Polarity:
-    def __init__(self, df, vecs, period_length, standartize_vecs=True):
-        if standartize_vecs:
-            vecs = (vecs - vecs.mean(axis=0))/vecs.std(axis=0)
+    def __init__(self, df, vecs, period_length):
+        vecs = (vecs - vecs.mean(axis=0))/vecs.std(axis=0)
         df['vecs'] = vecs.tolist()
         df['vecs'] = df['vecs'].apply(lambda x: np.array(x))
         df['date'] = pd.to_datetime(df['date'])
@@ -169,6 +168,10 @@ class Polarity:
                                     filtered['x_ewma'].iloc[j] + im_size * img_x,
                                     filtered['y_ewma'].iloc[j] - im_size * img_y,
                                     filtered['y_ewma'].iloc[j] + im_size * img_y])
+            for x,y in zip(filtered['x_ewma'], filtered['y_ewma']):
+                ax.arrow(0, 0, x*0.7, y*0.7, width=0.03, color='black')
+    
+            ax.scatter(0, 0, color='red', marker='o', edgecolor='black', s=140)
  
         animation = FuncAnimation(fig, annimate, interval=200, frames=num_iterations)
         writer = FFMpegWriter(fps=15)
