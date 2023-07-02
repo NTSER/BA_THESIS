@@ -158,6 +158,7 @@ class Polarity:
             ax.grid(True, linestyle='--', alpha=0.5)
             ax.set_xlim([-3, 3])
             ax.set_ylim([-2, 2])
+            ax.set_yticks([-2, -1, 0, 1, 2])
             ax.set_title(date.astype(str)[0:10], fontsize=20, fontweight='bold')
             for j in range(filtered.shape[0]):
                 current_img = self.source_to_logo.get(filtered['source'].iloc[j])
