@@ -64,11 +64,11 @@ y_test = test_df['source']
 corpus = list(tag_documents(df['content']))
 
 param_space = {
-    'vector_size':[1024, 512],
+    'vector_size':[64, 128, 512, 1024],
     'window':[5],
     'alpha':[0.025],
     'min_alpha':[0.001],
-    'max_vocab_size':[10**4]
+    'max_vocab_size':[10**4, 10**3]
 }
 
 #Initialize training_logs.csv with only column-names
