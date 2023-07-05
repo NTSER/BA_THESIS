@@ -8,4 +8,4 @@ Notes:
 - To save the animation, the requirements.txt file alone is not sufficient; the "ffmpeg" tool must also be downloaded additionally.
 
 
-For any inquiries or further information, please feel free to contact me via email at ntsereteli19@gmail.com.
+For any inquiries or further information, please feel free to contact at ntsereteli19@gmail.com.
